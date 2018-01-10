@@ -4,7 +4,7 @@ class MenuItem(db.Model):
     __tablename__ = 'menu_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime)
+    date = db.Column(db.Date)
     week = db.Column(db.String(32))
     day = db.Column(db.String(16))
     type_of_meal = db.Column(db.String(16))
@@ -14,4 +14,4 @@ class MenuItem(db.Model):
     dishes = db.Column(db.String(512))
 
     def __repr__(self):
-        return '<MenuItem %r>' % (self.name)
+        return '<MenuItem(date=%r,name=%r,dishes=%r)>' % (self.date.strftime('%Y-%m-%d'), self.name, self.dishes.split(','))

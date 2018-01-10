@@ -60,7 +60,7 @@ def get_today_menu():
     print(chat_id)
     print(message)
     if message == '/start':
-        menu_items = MenuItem.query.filter_by(date=datetime.today().date())
+        menu_items = db.session.query(MenuItem).filter(MenuItem.date == datetime.now().strftime('%Y-%m-%d'))
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
