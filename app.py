@@ -50,7 +50,7 @@ def get_today_menu():
 
 def reply(chat_id, text):
     global bot_token
-    res = requests.post(
+    res = requests.get(
         'https://api.telegram.org/bot{}/sendMessage'.format(bot_token),
         headers={'content-type': 'application/json'},
         data={'chat_id': chat_id, 'text': text})
