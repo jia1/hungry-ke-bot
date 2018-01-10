@@ -27,14 +27,10 @@ def index():
     print(bot_token)
     return 'Hello, World!'
 
-@app.route('/today', methods=['POST'])
+@app.route('/{}'.format(bot_token), methods=['POST'])
 def get_today_menu():
     req = request.get_json()
     print(req)
-    if (not all(keys in ['update_id', 'message'] for keys in req)
-        or not all(keys in ['chat', 'text'] for keys in req['message'])
-        or not 'id' in req['message']['chat']):
-        return 'Bad Request'
     update_id = req['update_id']
     chat_id = req['message']['chat']['id']
     message = req['message']['text']
