@@ -1,4 +1,5 @@
-from manage import db, app
+from manage import app as app
+from manage import db as db
 
 class MenuItem(db.Model):
     __tablename__ = 'menu_items'
