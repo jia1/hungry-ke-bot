@@ -7,3 +7,4 @@ Flask service on Heroku for Telegram bot
     python3 -m venv .
     source bin/activate
     pip3 install -r requirements.txt
+    python3 manage.py db init
