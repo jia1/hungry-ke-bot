@@ -13,7 +13,7 @@ config.read(config_file)
 
 app = Flask(__name__)
 
-postgres = dict(Config.items('postgres'))
+postgres = dict(config.items('postgres'))
 DATABASE_URI = 'postgresql+psycopg2://{username}:{password}@{host}/{database}'.format(
     user=postgres['USERNAME'],
     password=postgres['PASSWORD'],
