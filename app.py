@@ -23,11 +23,13 @@ from models import MenuItem # Import after everything else, otherwise circular d
 
 @app.route('/')
 def index():
+    print('Hello, World!')
     return 'Hello, World!'
 
 @app.route('/today', methods=['POST'])
 def get_today_menu():
     req = request.get_json()
+    print(req)
     if (not all(keys in ['update_id', 'message'] for keys in req)
         or not all(keys in ['chat', 'text'] for keys in req['message'])
         or not 'id' in req['message']['chat']):
@@ -37,9 +39,12 @@ def get_today_menu():
     message = req['message']['text']
     if message == '/start':
         menu_items = MenuItem.query.filter_by(date=datetime.today().date())
-        res = reply(chat_id, get_pretty(menu_items))
+        pretty_menu_items = get_pretty(menu_items)
+        print(pretty_menu_items)
+        res = reply(chat_id, pretty_menu_items)
     else:
         res = reply(chat_id, 'Please type /start to start.')
+    print(res)
     return res
 
 def reply(chat_id, text):
