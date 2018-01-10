@@ -6,7 +6,6 @@ import requests
 import time
 from datetime import datetime
 from configparser import ConfigParser
-from models import MenuItem
 
 config_file = 'config.ini'
 config = ConfigParser()
@@ -29,6 +28,8 @@ dish_key = config.get('script', 'DISH_KEY')
 dish_sep = config.get('script', 'DISH_STRING_SEPARATOR')
 
 db = SQLAlchemy(app)
+
+from models import MenuItem
 
 @app.route('/')
 def index():
