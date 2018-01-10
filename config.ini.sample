@@ -1,19 +1,19 @@
 [bot]
-TOKEN=
+token=
 
 [data]
-FILE=menu.csv
-SHOULD_LOAD=yes
+file=menu.csv
+should_load=yes
 
 [postgres]
-USERNAME=
-PASSWORD=
-HOST=
-DATABASE=
+username=
+password=
+host=
+database=
 
 [script]
-DATE_FORMAT_STRING=%Y-%m-%d
-DATE_KEY=date
-NAME_KEY=name
-DISH_KEY=dishes
-DISH_STRING_SEPARATOR=,
+date_format_string=%Y-%m-%d
+date_key=date
+name_key=name
+dish_key=dishes
+dish_string_separator=,

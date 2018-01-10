@@ -15,17 +15,17 @@ app = Flask(__name__)
 
 postgres = dict(config.items('postgres'))
 DATABASE_URI = 'postgresql+psycopg2://{username}:{password}@{host}/{database}'.format(
-    user=postgres['USERNAME'],
-    password=postgres['PASSWORD'],
-    host=postgres['HOST'],
-    database=postgres['DATABASE'])
+    user=postgres['username'],
+    password=postgres['password'],
+    host=postgres['host'],
+    database=postgres['database'])
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Silence the deprecation warning
 
-date_key = config.get('script', 'DATE_KEY')
-name_key = config.get('script', 'NAME_KEY')
-dish_key = config.get('script', 'DISH_KEY')
-dish_sep = config.get('script', 'DISH_STRING_SEPARATOR')
+date_key = config.get('script', 'date_key')
+name_key = config.get('script', 'name_key')
+dish_key = config.get('script', 'dish_key')
+dish_sep = config.get('script', 'dish_string_separator')
 
 db = SQLAlchemy(app)
 
@@ -42,7 +42,7 @@ def load_csv():
     global date_key
     global dish_key
     global dish_sep
-    if config.getboolean('data', 'SHOULD_LOAD'):
+    if config.getboolean('data', 'should_load'):
         with open(config.get('data', 'FILE'), newline='') as csv_file:
             csv_reader = csv.reader(csv_file)
             column_names = next(csv_reader)
@@ -54,14 +54,14 @@ def load_csv():
                     menu_item_dict[column_name] = menu_item_list[i]
                 menu_item_dict[date_key] = datetime.strptime(
                     menu_item_dict[date_key],
-                    config.get('script', 'DATE_FORMAT_STRING')).date()
+                    config.get('script', 'date_format_string')).date()
                 menu_item_dict[dish_key] = [menu_item_dict[dish_key]]
                 for dish in menu_item_list[num_columns:]:
                     menu_item_dict[dish_index].append(dish)
                 menu_item_dict[dish_key] = separator.join(menu_item_dict[dish_index])
                 db.session.add(MenuItem(**menu_item_dict))
         db.session.commit()
-        config.set('data', 'SHOULD_LOAD', 'no')
+        config.set('data', 'should_load', 'no')
         with open(data_file, 'w') as config_file:
             config.write(config_file)
         return 'Created'
@@ -87,7 +87,7 @@ def get_today_menu():
 
 def reply(chat_id, text):
     res = requests.post(
-        'https://api.telegram.org/bot{}/sendMessage'.format(config.get('bot', 'TOKEN')),
+        'https://api.telegram.org/bot{}/sendMessage'.format(config.get('bot', 'token')),
         headers={'content-type': 'application/json'},
         data={'chat_id': chat_id, 'text': text})
     return res.json()
