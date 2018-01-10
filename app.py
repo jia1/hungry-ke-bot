@@ -61,7 +61,7 @@ def get_today_menu():
     print(message)
     if message == '/start':
         # menu_items = MenuItem.query.filter(cast(MenuItem.date, Date)==datetime.now().strftime('%Y-%m-%d')).all()
-        menu_items = map(lambda m: json.loads(m), MenuItem.query.all())
+        menu_items = map(lambda m: {'date': m.date, 'type_of_meal': m.type_of_meal, 'name': m.name, 'dishes': m.dishes}, MenuItem.query.all())
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
