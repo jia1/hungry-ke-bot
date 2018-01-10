@@ -4,7 +4,7 @@ class MenuItem(db.Model):
     __tablename__ = 'menu_items'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date)
+    date = db.Column(db.DateTime)
     week = db.Column(db.String(32))
     day = db.Column(db.String(16))
     type_of_meal = db.Column(db.String(16))
