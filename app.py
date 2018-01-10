@@ -6,6 +6,7 @@ import os
 import requests
 import time
 from datetime import datetime
+from urllib import parse
 
 db_url = os.environ['DB_URL']
 bot_token = os.environ['BOT_TOKEN']
@@ -62,19 +63,15 @@ def get_today_menu():
         menu_items = MenuItem.query.filter_by(date=datetime.today().date())
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
-        res = reply(chat_id, pretty_menu_items)
+        reply(chat_id, pretty_menu_items)
     else:
-        res = reply(chat_id, 'Please type /start to start.')
-    print(res)
+        reply(chat_id, 'Please type /start to start.')
     return 'OK'
 
 def reply(chat_id, text):
     global bot_token
-    res = requests.post(
-        'https://api.telegram.org/bot{}/sendMessage'.format(bot_token),
-        headers={'content-type': 'application/json'},
-        data={'chat_id': chat_id, 'text': text})
-    return res
+    text = parse.quote_plus(text)
+    requests.get('https://api.telegram.org/bot{}/sendMessage?text={}&chat_id={}'.format(bot_token, text, chat_id))
 
 def get_pretty(menu_items):
     global name_key
