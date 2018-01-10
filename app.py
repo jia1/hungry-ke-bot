@@ -46,7 +46,7 @@ def get_today_menu():
 
 def reply(chat_id, text):
     global bot_token
-    res = requests.get(
+    res = requests.post(
         'https://api.telegram.org/bot{}/sendMessage'.format(bot_token),
         headers={'content-type': 'application/json'},
         data={'chat_id': chat_id, 'text': text})
@@ -62,6 +62,8 @@ def get_pretty(menu_items):
             dishes = menu_item[dish_key].split(dish_sep)
             for dish in dishes:
                 string_builder.extend(['\t', dish, '\n'])
+    if len(string_builder) == 1:
+        string_builder.extend(['\n', 'N.A.', '\n'])
     return ''.join(string_builder)
 
 if __name__ == '__main__':
