@@ -23,7 +23,8 @@ from models import MenuItem # Import after everything else, otherwise circular d
 
 @app.route('/')
 def index():
-    print('Hello, World!')
+    print(db_url)
+    print(bot_token)
     return 'Hello, World!'
 
 @app.route('/today', methods=['POST'])
