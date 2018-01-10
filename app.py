@@ -70,9 +70,9 @@ def load_csv():
 @app.route('/today', methods=['POST'])
 def get_today_menu():
     req = request.get_json()
-    if not all(keys in ['update_id', 'message'] for keys in req)
+    if (not all(keys in ['update_id', 'message'] for keys in req)
         or not all(keys in ['chat', 'text'] for keys in req['message'])
-        or not 'id' in req['message']['chat']:
+        or not 'id' in req['message']['chat']):
         return 'Bad Request'
     update_id = req['update_id']
     chat_id = req['message']['chat']['id']
