@@ -10,7 +10,7 @@ from configparser import ConfigParser
 
 config_file = 'config.ini'
 config = ConfigParser()
-config.read(os.path.join(os.path.dirname(__file__), r'config.ini')) # Cannot just config.read(config_file) - because of Heroku
+config.read(os.path.join(os.path.dirname(__file__), config_file), encoding='utf-8') # Cannot just config.read(config_file) - because of Heroku
 
 app = Flask(__name__)
 
