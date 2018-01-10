@@ -14,5 +14,9 @@ class MenuItem(db.Model):
     dishes = db.Column(db.String(512))
 
     def __repr__(self):
-        return '<MenuItem(date=%r,name=%r,dishes=%r)>' % (
-            self.date.strftime('%Y-%m-%d'), self.name, self.dishes.split(',') if self.dishes else None)
+        return '<MenuItem(id=%r,date=%r,type_of_meal=%r,name=%r,dishes=%r)>' % (
+            self.id,
+            self.date.strftime('%Y-%m-%d'),
+            self.type_of_meal,
+            self.name,
+            self.dishes.split(',') if self.dishes else None)

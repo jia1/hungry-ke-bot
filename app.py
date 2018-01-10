@@ -1,11 +1,9 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Date, cast
 
-import json
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib import parse
 
 db_url = os.environ['DB_URL']
@@ -60,8 +58,8 @@ def get_today_menu():
     print(chat_id)
     print(message)
     if message == '/start':
-        # menu_items = MenuItem.query.filter(cast(MenuItem.date, Date)==datetime.now().strftime('%Y-%m-%d')).all()
-        menu_items = map(lambda m: {'date': m.date, 'type_of_meal': m.type_of_meal, 'name': m.name, 'dishes': m.dishes}, MenuItem.query.all())
+        menu_items = MenuItem.query.filter(MenuItem.date == datetime.now().date()).all()
+        menu_items = map(lambda m: {'date': m.date, 'type_of_meal': m.type_of_meal, 'name': m.name, 'dishes': m.dishes}, menu_items)
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
