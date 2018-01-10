@@ -15,13 +15,11 @@ config.read(config_file)
 app = Flask(__name__)
 
 postgres = dict(Config.items('postgres'))
-DATABASE_URI = 'postgresql+psycopg2://{username}:{password}@{host}/{database}'
-    .format(
-        user=postgres['USERNAME'],
-        password=postgres['PASSWORD'],
-        host=postgres['HOST'],
-        database=postgres['DATABASE']
-    )
+DATABASE_URI = 'postgresql+psycopg2://{username}:{password}@{host}/{database}'.format(
+    user=postgres['USERNAME'],
+    password=postgres['PASSWORD'],
+    host=postgres['HOST'],
+    database=postgres['DATABASE'])
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Silence the deprecation warning
 
@@ -88,11 +86,9 @@ def get_today_menu():
 
 def reply(chat_id, text):
     res = requests.post(
-        'https://api.telegram.org/bot{}/sendMessage'
-            .format(config.get('bot', 'TOKEN')),
+        'https://api.telegram.org/bot{}/sendMessage'.format(config.get('bot', 'TOKEN')),
         headers={'content-type': 'application/json'},
-        data={'chat_id': chat_id, 'text': text}
-    )
+        data={'chat_id': chat_id, 'text': text})
     return res.json()
 
 def get_pretty(menu_items):
