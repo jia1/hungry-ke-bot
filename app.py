@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 
 import csv
+import os
 import requests
 import time
 from datetime import datetime
@@ -9,7 +10,7 @@ from configparser import ConfigParser
 
 config_file = 'config.ini'
 config = ConfigParser()
-config.read(config_file)
+config.read(os.path.join(os.path.dirname(__file__), config_file)) # Cannot just config.read(config_file) - because of Heroku
 
 app = Flask(__name__)
 
