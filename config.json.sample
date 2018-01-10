@@ -1,0 +1,22 @@
+{
+    "bot": {
+        "token": ""
+    },
+    "data": {
+        "file": "menu.csv",
+        "should_load": true
+    },
+    "postgres": {
+        "username": "",
+        "password": "",
+        "host": "",
+        "database": ""
+    },
+    "script": {
+        "date_format_string": "%Y-%m-%d",
+        "date_key": "date",
+        "name_key": "name",
+        "dish_key": "dishes",
+        "dish_string_separator": ","
+    }
+}

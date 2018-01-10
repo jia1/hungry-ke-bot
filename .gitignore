@@ -6,4 +6,5 @@ pip-selfcheck.json
 pyvenv.cfg
 runtime.txt
 config.ini
+config.json
 menu.csv

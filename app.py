@@ -8,9 +8,9 @@ import time
 from datetime import datetime
 from configparser import ConfigParser
 
-config_file = 'config.ini'
+config_file = os.path.join(os.path.dirname(__file__), 'config.ini') # Cannot just config.read(config_file) - because of Heroku
 config = ConfigParser()
-config.read(os.path.join(os.path.dirname(__file__), config_file), encoding='utf-8') # Cannot just config.read(config_file) - because of Heroku
+config.read(config_file, encoding='utf-8')
 
 app = Flask(__name__)
 
@@ -44,7 +44,8 @@ def load_csv():
     global dish_key
     global dish_sep
     if config.getboolean('data', 'should_load'):
-        with open(config.get('data', 'FILE'), newline='') as csv_file:
+        data_file = os.path.join(os.path.dirname(__file__), config.get('data', 'FILE')) # Cannot just config.read(config_file) - because of Heroku
+        with open(data_file, newline='') as csv_file:
             csv_reader = csv.reader(csv_file)
             column_names = next(csv_reader)
             num_columns = len(column_names)
@@ -63,8 +64,8 @@ def load_csv():
                 db.session.add(MenuItem(**menu_item_dict))
         db.session.commit()
         config.set('data', 'should_load', 'no')
-        with open(data_file, 'w') as config_file:
-            config.write(config_file)
+        with open(config_file, 'w') as file_to_write:
+            config.write(file_to_write)
         return 'Created'
     else:
         return 'Forbidden'
