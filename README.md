@@ -1,11 +1,9 @@
-# conical-flask
-Empty Flask app that can be built and deployed on Heroku out of the box (CodeIT Suisse 2017 in codeit-suisse branch)
+# hungry-ke-bot
+Flask service on Heroku for Telegram bot
 
-    sudo apt install pip3
-    pip3 install virtualenv
-    git clone https://github.com/jia1/conical-flask.git
-    cd conical-flask
-    virtualenv venv
-    . venv/bin/activate
+    brew install python3
+    git clone https://github.com/jia1/hungry-ke-bot.git
+    cd hungry-ke-bot
+    python3 -m venv .
+    source bin/activate
     pip3 install -r requirements.txt
-    python server.py # for testing on localhost:5000
