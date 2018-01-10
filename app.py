@@ -66,7 +66,7 @@ def get_today_menu():
     else:
         res = reply(chat_id, 'Please type /start to start.')
     print(res)
-    return res
+    return 'OK'
 
 def reply(chat_id, text):
     global bot_token
@@ -74,7 +74,7 @@ def reply(chat_id, text):
         'https://api.telegram.org/bot{}/sendMessage'.format(bot_token),
         headers={'content-type': 'application/json'},
         data={'chat_id': chat_id, 'text': text})
-    return res.json()
+    return res
 
 def get_pretty(menu_items):
     global name_key
