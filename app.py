@@ -27,13 +27,37 @@ def index():
     print(bot_token)
     return 'Hello, World!'
 
+# Example webhook payload
+'''
+{
+    'message': {
+        'text': 'ok',
+        'message_id': 13,
+        'chat': {
+            'type': 'private',
+            'id': 132455911,
+            'first_name': 'Jia Yee'
+        },
+        'date': 1515607534,
+        'from': {
+            'language_code': 'en-SG',
+            'id': 132455911,
+            'first_name': 'Jia Yee',
+            'is_bot': False
+        }
+    },
+    'update_id': 508520474
+}
+'''
+
 @app.route('/{}'.format(bot_token), methods=['POST'])
 def get_today_menu():
     req = request.get_json()
     print(req)
-    update_id = req['update_id']
     chat_id = req['message']['chat']['id']
     message = req['message']['text']
+    print(chat_id)
+    print(message)
     if message == '/start':
         menu_items = MenuItem.query.filter_by(date=datetime.today().date())
         pretty_menu_items = get_pretty(menu_items)
