@@ -2,28 +2,19 @@ from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 
 import csv
-import json
 import os
 import requests
 import time
 from datetime import datetime
-
-'''
 from configparser import ConfigParser
 
 config_file = os.path.join(os.path.dirname(__file__), 'config.ini') # Cannot just config.read(config_file) - because of Heroku
 config = ConfigParser()
 config.read(config_file, encoding='utf-8')
-'''
-
-config_file = os.path.join(os.path.dirname(__file__), 'config.json')
-with open(config_file, 'r') as f:
-    config = json.load(f)
 
 app = Flask(__name__)
 
-# postgres = dict(config.items('postgres'))
-postgres = config['postgres']
+postgres = dict(config.items('postgres'))
 DATABASE_URI = 'postgresql+psycopg2://{username}:{password}@{host}/{database}'.format(
     user=postgres['username'],
     password=postgres['password'],
@@ -32,17 +23,10 @@ DATABASE_URI = 'postgresql+psycopg2://{username}:{password}@{host}/{database}'.f
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Silence the deprecation warning
 
-'''
 date_key = config.get('script', 'date_key')
 name_key = config.get('script', 'name_key')
 dish_key = config.get('script', 'dish_key')
 dish_sep = config.get('script', 'dish_string_separator')
-'''
-
-date_key = config['script']['date_key']
-name_key = config['script']['name_key']
-dish_key = config['script']['dish_key']
-dish_sep = config['script']['dish_string_separator']
 
 db = SQLAlchemy(app)
 
@@ -59,10 +43,8 @@ def load_csv():
     global date_key
     global dish_key
     global dish_sep
-    # if config.getboolean('data', 'should_load'):
-    if config['data']['should_load']:
-        # data_file = os.path.join(os.path.dirname(__file__), config.get('data', 'file')) # Cannot just config.read(config_file) - because of Heroku
-        data_file = os.path.join(os.path.dirname(__file__), config['data']['file'])
+    if config.getboolean('data', 'should_load'):
+        data_file = os.path.join(os.path.dirname(__file__), config.get('data', 'file')) # Cannot just config.read(config_file) - because of Heroku
         with open(data_file, newline='') as csv_file:
             csv_reader = csv.reader(csv_file)
             column_names = next(csv_reader)
@@ -74,22 +56,16 @@ def load_csv():
                     menu_item_dict[column_name] = menu_item_list[i]
                 menu_item_dict[date_key] = datetime.strptime(
                     menu_item_dict[date_key],
-                    # config.get('script', 'date_format_string')).date()
-                    config['script']['date_format_string']).date()
+                    config.get('script', 'date_format_string')).date()
                 menu_item_dict[dish_key] = [menu_item_dict[dish_key]]
                 for dish in menu_item_list[num_columns:]:
                     menu_item_dict[dish_index].append(dish)
                 menu_item_dict[dish_key] = separator.join(menu_item_dict[dish_index])
                 db.session.add(MenuItem(**menu_item_dict))
         db.session.commit()
-        '''
         config.set('data', 'should_load', 'no')
         with open(config_file, 'w') as file_to_write:
             config.write(file_to_write)
-        '''
-        config['data']['should_load'] = False
-        with open(config_file, 'w') as f:
-            json.dump(config, f)
         return 'Created'
     else:
         return 'Forbidden'
@@ -113,7 +89,7 @@ def get_today_menu():
 
 def reply(chat_id, text):
     res = requests.post(
-        'https://api.telegram.org/bot{}/sendMessage'.format(config['bot']['token']), # Originally config.get('bot', 'token')
+        'https://api.telegram.org/bot{}/sendMessage'.format(config.get('bot', 'token')),
         headers={'content-type': 'application/json'},
         data={'chat_id': chat_id, 'text': text})
     return res.json()
