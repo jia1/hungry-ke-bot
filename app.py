@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import requests
 from datetime import datetime
+from pytz import timezone
 from urllib import parse
 import psycopg2 # To import tz
 
@@ -74,9 +75,9 @@ def get_today_menu():
 
 def is_today(menu_item):
     print(menu_item[date_key], menu_item[date_key].date())
-    print(datetime.now(), datetime.now().date())
-    print(menu_item[date_key].date() == datetime.now().date())
-    return menu_item[date_key].date() == datetime.now().date()
+    print(datetime.now(timezone('Asia/Singapore')), datetime.now(timezone('Asia/Singapore')).date())
+    print(menu_item[date_key].date() == datetime.now(timezone('Asia/Singapore')).date())
+    return menu_item[date_key].date() == datetime.now(timezone('Asia/Singapore')).date()
 
 def reply(chat_id, text):
     text = parse.quote_plus(text)
