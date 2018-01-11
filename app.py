@@ -73,9 +73,9 @@ def reply(chat_id, text):
     requests.get('https://api.telegram.org/bot{}/sendMessage?text={}&chat_id={}'.format(bot_token, text, chat_id))
 
 def get_pretty(meals, meal_types=['breakfast', 'dinner']):
-    string_builder = ['Today\'s menu:\n']
+    string_builder = ['Today\'s menu:']
     for i in range(len(meals)):
-        string_builder.append('\n**{meal}**'.format(meal=meal_types[i].capitalize()))
+        string_builder.append('\n\n**{meal}**'.format(meal=meal_types[i].capitalize()))
         menu_items = meals[i]
         for index, menu_item in enumerate(menu_items, ord('A')):
             string_builder.append('\n{index}. {name}'.format(index=chr(index), name=menu_item[name_key].capitalize()))
