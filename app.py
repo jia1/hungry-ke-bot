@@ -6,15 +6,14 @@ import requests
 from datetime import datetime
 from pytz import timezone
 from urllib import parse
-import psycopg2 # To import tz
 
 db_url = os.environ['DB_URL']
 bot_token = os.environ['BOT_TOKEN']
 date_key = 'date'
 meal_key = 'type_of_meal'
 name_key = 'name'
-dish_key = 'dishes'
-dish_sep = ','
+dishes_key = 'dishes'
+dishes_string_separator = ','
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
@@ -61,55 +60,37 @@ def get_today_menu():
     print(chat_id)
     print(message)
     if message == '/start':
-        menu_items = MenuItem.query.all() # This works
-        menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
-        menu_items = list(filter(is_today, menu_items))
-        print(list(menu_items))
-
-        string_builder = ['Today\'s menu:\n']
-        print(menu_items)
-        for menu_item in menu_items:
-            print(menu_item)
-            string_builder.extend(['\n', menu_item[meal_key], '\n'])
-            string_builder.extend(['\n', menu_item[name_key], '\n'])
-            if menu_item[dish_key]:
-                dishes = menu_item[dish_key].split(dish_sep)
-                for dish in dishes:
-                    string_builder.extend(['\t', dish, '\n'])
-        print(string_builder)
-        if len(string_builder) == 1:
-            string_builder.extend(['\n', 'N.A.', '\n'])
-        pretty_menu_items = ''.join(string_builder)
-
-        # pretty_menu_items = get_pretty(list(menu_items))
+        menu_items = MenuItem.query.filter(MenuItem.date.date() == datetime.now(timezone('Asia/Singapore')).date())
+        meals = map(lambda menu_items: map(lambda menu_item: {
+            name_key: menu_item.name,
+            dishes_key: menu_item.dishes
+        }, menu_items), [
+            menu_items.filter_by(type_of_meal='breakfast').all(),
+            menu_items.filter_by(type_of_meal='dinner').all()
+        ])
+        print(list(meals))
+        pretty_menu_items = get_pretty(meals)
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
     else:
         reply(chat_id, 'Please type /start to start.')
     return 'OK'
 
-def is_today(menu_item):
-    print(menu_item[date_key], menu_item[date_key].date())
-    print(datetime.now(timezone('Asia/Singapore')), datetime.now(timezone('Asia/Singapore')).date())
-    print(menu_item[date_key].date() == datetime.now(timezone('Asia/Singapore')).date())
-    return menu_item[date_key].date() == datetime.now(timezone('Asia/Singapore')).date()
-
 def reply(chat_id, text):
     text = parse.quote_plus(text)
     requests.get('https://api.telegram.org/bot{}/sendMessage?text={}&chat_id={}'.format(bot_token, text, chat_id))
 
-def get_pretty(menu_items):
+def get_pretty(meals, meal_types=['breakfast', 'dinner']):
     string_builder = ['Today\'s menu:\n']
-    print(menu_items)
-    for menu_item in menu_items:
-        print(menu_item)
-        string_builder.extend(['\n', menu_item[date_key], '\n'])
-        string_builder.extend(['\n', menu_item[meal_key], '\n'])
-        string_builder.extend(['\n', menu_item[name_key], '\n'])
-        if menu_item[dish_key]:
-            dishes = menu_item[dish_key].split(dish_sep)
-            for dish in dishes:
-                string_builder.extend(['\t', dish, '\n'])
+    for i in range(len(meals)):
+        string_builder.extend(['\n', meal_types[i]])
+        menu_items = meals[i]
+        for menu_item in menu_items:
+            string_builder.extend(['\n', menu_item[name_key], '\n'])
+            if menu_item[dishes_key]:
+                dishes = menu_item[dishes_key].split(dishes_string_separator)
+                for dish in dishes:
+                    string_builder.extend(['\t', dish, '\n'])
     print(string_builder)
     if len(string_builder) == 1:
         string_builder.extend(['\n', 'N.A.', '\n'])
