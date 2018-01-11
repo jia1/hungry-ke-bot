@@ -81,17 +81,17 @@ def get_pretty(meals, meal_types=['breakfast', 'dinner']):
     string_builder = ['Today\'s menu:\n']
     print(meals)
     for i in range(len(meals)):
-        string_builder.extend(['\n', meal_types[i].capitalize()])
+        string_builder.append('\n**{meal}**'.format(meal=meal_types[i].capitalize()))
         menu_items = meals[i]
-        for menu_item in menu_items:
-            string_builder.extend(['\n', menu_item[name_key], '\n'])
+        for index, menu_item in enumerate(menu_items, ord('A')):
+            string_builder.append('\n{index}. {name}\n'.format(index=chr(index), name=menu_item[name_key].capitalize()))
             if menu_item[dishes_key]:
                 dishes = menu_item[dishes_key].split(dishes_string_separator)
-                for dish in dishes:
-                    string_builder.extend(['\t', dish, '\n'])
+                for index, dish in enumerate(dishes, 1):
+                    string_builder.append('\t{index}. {dish}\n'.format(index=index, dish=dish))
     print(string_builder)
     if len(string_builder) == 1:
-        string_builder.extend(['\n', 'N.A.', '\n'])
+        string_builder.append('\nN.A.')
     return ''.join(string_builder)
 
 if __name__ == '__main__':
