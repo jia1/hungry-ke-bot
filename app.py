@@ -57,16 +57,14 @@ def get_today_menu():
     print(req)
     chat_id = req['message']['chat']['id']
     message = req['message']['text']
-    print(chat_id)
-    print(message)
     if message == '/start':
-        menu_items = MenuItem.query.filter(MenuItem.date.date() == datetime.now(timezone('Asia/Singapore')).date())
+        menu_items = MenuItem.query.filter(MenuItem.date.date() == datetime.now(timezone('Asia/Singapore')).date()).all()
         meals = map(lambda menu_items: map(lambda menu_item: {
             name_key: menu_item.name,
             dishes_key: menu_item.dishes
         }, menu_items), [
-            menu_items.filter_by(type_of_meal='breakfast').all(),
-            menu_items.filter_by(type_of_meal='dinner').all()
+            filter(lambda menu_item: menu_item[meal_key] == 'breakfast', menu_items),
+            filter(lambda menu_item: menu_item[meal_key] == 'dinner', menu_items),
         ])
         print(list(meals))
         pretty_menu_items = get_pretty(meals)
@@ -82,8 +80,9 @@ def reply(chat_id, text):
 
 def get_pretty(meals, meal_types=['breakfast', 'dinner']):
     string_builder = ['Today\'s menu:\n']
+    print(meals)
     for i in range(len(meals)):
-        string_builder.extend(['\n', meal_types[i]])
+        string_builder.extend(['\n', meal_types[i].capitalize()])
         menu_items = meals[i]
         for menu_item in menu_items:
             string_builder.extend(['\n', menu_item[name_key], '\n'])
