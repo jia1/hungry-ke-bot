@@ -9,6 +9,7 @@ from urllib import parse
 db_url = os.environ['DB_URL']
 bot_token = os.environ['BOT_TOKEN']
 date_key = 'date'
+meal_key = 'type_of_meal'
 name_key = 'name'
 dish_key = 'dishes'
 dish_sep = ','
@@ -58,9 +59,11 @@ def get_today_menu():
     print(chat_id)
     print(message)
     if message == '/start':
-        # menu_items = MenuItem.query.all() # This works
-        menu_items = MenuItem.query.filter(MenuItem.date == datetime.now().strftime('%Y-%m-%d')).all()
-        menu_items = map(lambda m: {'date': m.date, 'type_of_meal': m.type_of_meal, 'name': m.name, 'dishes': m.dishes}, menu_items)
+        menu_items = MenuItem.query.all() # This works
+        menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
+        print(menu_items)
+        menu_items = MenuItem.query.filter(MenuItem.date.date() == datetime.now().date()).all()
+        menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
@@ -69,15 +72,14 @@ def get_today_menu():
     return 'OK'
 
 def reply(chat_id, text):
-    global bot_token
     text = parse.quote_plus(text)
     requests.get('https://api.telegram.org/bot{}/sendMessage?text={}&chat_id={}'.format(bot_token, text, chat_id))
 
 def get_pretty(menu_items):
-    global name_key
-    global dish_sep
     string_builder = ['Today\'s menu:\n']
     for menu_item in menu_items:
+        string_builder.extend(['\n', menu_item[date_key], '\n'])
+        string_builder.extend(['\n', menu_item[meal_key], '\n'])
         string_builder.extend(['\n', menu_item[name_key], '\n'])
         if menu_item[dish_key]:
             dishes = menu_item[dish_key].split(dish_sep)
