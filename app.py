@@ -62,7 +62,7 @@ def get_today_menu():
     if message == '/start':
         menu_items = MenuItem.query.all() # This works
         menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
-        menu_items = filter(lambda m: m[date_key] == datetime.now().date(), menu_items)
+        menu_items = filter(lambda m: m[date_key].date() == datetime.now().date(), menu_items)
         print(list(menu_items))
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
