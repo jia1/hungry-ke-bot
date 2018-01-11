@@ -61,8 +61,9 @@ def get_today_menu():
     print(message)
     if message == '/start':
         menu_items = MenuItem.query.all() # This works
+        print(menu_items)
         menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
-        menu_items = filter(lambda m: m[date_key].date() == datetime.now().date(), menu_items)
+        menu_items = filter(is_today, menu_items)
         print(list(menu_items))
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
@@ -70,6 +71,12 @@ def get_today_menu():
     else:
         reply(chat_id, 'Please type /start to start.')
     return 'OK'
+
+def is_today(menu_item):
+    print(menu_item[date_key], menu_item[date_key].date())
+    print(datetime.now(), datetime.now().date())
+    print(menu_item[date_key].date() == datetime.now().date())
+    return menu_item[date_key].date() == datetime.now().date()
 
 def reply(chat_id, text):
     text = parse.quote_plus(text)
