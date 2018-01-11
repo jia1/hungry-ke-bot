@@ -58,14 +58,13 @@ def get_today_menu():
     chat_id = req['message']['chat']['id']
     message = req['message']['text']
     if message == '/start':
-        menu_items = MenuItem.query.filter(MenuItem.date.date() == datetime.now(timezone('Asia/Singapore')).date()).all()
-        meals = map(lambda menu_items: map(lambda menu_item: {
-            name_key: menu_item.name,
-            dishes_key: menu_item.dishes
-        }, menu_items), [
+        today = datetime.now(timezone('Asia/Singapore')).date()
+        menu_items = [{name_key: menu_item.name, dishes_key: menu_item.dishes} for menu_item in MenuItem.query.all()
+            if menu_item.date.date() == today]
+        meals = [
             filter(lambda menu_item: menu_item[meal_key] == 'breakfast', menu_items),
             filter(lambda menu_item: menu_item[meal_key] == 'dinner', menu_items),
-        ])
+        ]
         print(list(meals))
         pretty_menu_items = get_pretty(meals)
         print(pretty_menu_items)
