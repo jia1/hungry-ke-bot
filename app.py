@@ -65,7 +65,24 @@ def get_today_menu():
         menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
         menu_items = filter(is_today, menu_items)
         print(list(menu_items))
-        pretty_menu_items = get_pretty(list(menu_items))
+
+        string_builder = ['Today\'s menu:\n']
+        print(menu_items)
+        for menu_item in menu_items:
+            print(menu_item)
+            string_builder.extend(['\n', menu_item[date_key], '\n'])
+            string_builder.extend(['\n', menu_item[meal_key], '\n'])
+            string_builder.extend(['\n', menu_item[name_key], '\n'])
+            if menu_item[dish_key]:
+                dishes = menu_item[dish_key].split(dish_sep)
+                for dish in dishes:
+                    string_builder.extend(['\t', dish, '\n'])
+        print(string_builder)
+        if len(string_builder) == 1:
+            string_builder.extend(['\n', 'N.A.', '\n'])
+        pretty_menu_items = ''.join(string_builder)
+
+        # pretty_menu_items = get_pretty(list(menu_items))
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
     else:
