@@ -70,7 +70,6 @@ def get_today_menu():
         print(menu_items)
         for menu_item in menu_items:
             print(menu_item)
-            string_builder.extend(['\n', menu_item[date_key], '\n'])
             string_builder.extend(['\n', menu_item[meal_key], '\n'])
             string_builder.extend(['\n', menu_item[name_key], '\n'])
             if menu_item[dish_key]:
