@@ -65,7 +65,7 @@ def get_today_menu():
         menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
         menu_items = filter(is_today, menu_items)
         print(list(menu_items))
-        pretty_menu_items = get_pretty(menu_items)
+        pretty_menu_items = get_pretty(list(menu_items))
         print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
     else:
@@ -84,7 +84,7 @@ def reply(chat_id, text):
 
 def get_pretty(menu_items):
     string_builder = ['Today\'s menu:\n']
-    print(list(menu_items))
+    print(menu_items)
     for menu_item in menu_items:
         print(menu_item)
         string_builder.extend(['\n', menu_item[date_key], '\n'])
