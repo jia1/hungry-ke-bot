@@ -62,10 +62,7 @@ def get_today_menu():
     if message == '/start':
         menu_items = MenuItem.query.all() # This works
         menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
-        print(list(menu_items))
-        today = datetime.combine(datetime.now(), datetime.min.time()).replace(tzinfo=psycopg2.tz.FixedOffsetTimezone(offset=0, name=None))
-        menu_items = MenuItem.query.filter_by(date=today).all()
-        menu_items = map(lambda m: {date_key: m.date, meal_key: m.type_of_meal, name_key: m.name, dish_key: m.dishes}, menu_items)
+        menu_items = filter(lambda m: m[date_key] == datetime.now().date(), menu_items)
         print(list(menu_items))
         pretty_menu_items = get_pretty(menu_items)
         print(pretty_menu_items)
