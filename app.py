@@ -59,7 +59,7 @@ def get_today_menu():
     message = req['message']['text']
     if message == '/start':
         today = datetime.now(timezone('Asia/Singapore')).date()
-        menu_items = [{name_key: menu_item.name, dishes_key: menu_item.dishes} for menu_item in MenuItem.query.all()
+        menu_items = [{meal_key: menu_item.type_of_meal, name_key: menu_item.name, dishes_key: menu_item.dishes} for menu_item in MenuItem.query.all()
             if menu_item.date.date() == today]
         meals = [
             filter(lambda menu_item: menu_item[meal_key] == 'breakfast', menu_items),
