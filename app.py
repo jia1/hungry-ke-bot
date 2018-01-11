@@ -24,8 +24,6 @@ from models import MenuItem # Import after everything else, otherwise circular d
 
 @app.route('/')
 def index():
-    print(db_url)
-    print(bot_token)
     return 'Hello, World!'
 
 # Example webhook payload
@@ -54,7 +52,6 @@ def index():
 @app.route('/{}'.format(bot_token), methods=['POST'])
 def get_today_menu():
     req = request.get_json()
-    print(req)
     chat_id = req['message']['chat']['id']
     message = req['message']['text']
     if message == '/start':
@@ -65,9 +62,7 @@ def get_today_menu():
             filter(lambda menu_item: menu_item[meal_key] == 'breakfast', menu_items),
             filter(lambda menu_item: menu_item[meal_key] == 'dinner', menu_items),
         ]
-        print(list(meals))
         pretty_menu_items = get_pretty(meals)
-        print(pretty_menu_items)
         reply(chat_id, pretty_menu_items)
     else:
         reply(chat_id, 'Please type /start to start.')
@@ -79,7 +74,6 @@ def reply(chat_id, text):
 
 def get_pretty(meals, meal_types=['breakfast', 'dinner']):
     string_builder = ['Today\'s menu:\n']
-    print(meals)
     for i in range(len(meals)):
         string_builder.append('\n**{meal}**'.format(meal=meal_types[i].capitalize()))
         menu_items = meals[i]
@@ -88,8 +82,7 @@ def get_pretty(meals, meal_types=['breakfast', 'dinner']):
             if menu_item[dishes_key]:
                 dishes = menu_item[dishes_key].split(dishes_string_separator)
                 for index, dish in enumerate(dishes, 1):
-                    string_builder.append('\t{index}. {dish}\n'.format(index=index, dish=dish))
-    print(string_builder)
+                    string_builder.append('    {index}. {dish}\n'.format(index=index, dish=dish.capitalize()))
     if len(string_builder) == 1:
         string_builder.append('\nN.A.')
     return ''.join(string_builder)
