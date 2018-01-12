@@ -53,6 +53,7 @@ I am not sure what is the best way to do this, but this is how I do it:
 ### 2. Running the upload script in the terminal
 1. Download the script via `git clone` or a simple `Save As`.
 1. Put `menu.csv` into the same directory for simplicity.
+1. Install Python 3 (comes with pip3).
 
 Assuming `upload.py` and `menu.csv` are in the current directory, run the following commands:
 ```bash
