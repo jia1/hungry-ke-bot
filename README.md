@@ -27,7 +27,7 @@ python3 upload.py menu.csv
 
 ##### Windows
 
-Scroll down further to see the screenshots.
+Refer to [hungry-ke-bot Wiki](https://github.com/jia1/hungry-ke-bot/wiki/User-instructions-on-uploading-CSV-file-data) for both instructions and reference screenshots.
 
 Instructions:
 1. Install Python 3.6.4
