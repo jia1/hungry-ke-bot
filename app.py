@@ -61,7 +61,7 @@ def get_today_menu():
         message = req['message']['text']
     except KeyError as e:
         print('Exception: {}\nRequest: {}'.format(e, req))
-        return
+        return 'NOT OK'
     if message == '/start':
         today = datetime.now(timezone('Asia/Singapore')).date()
         menu_items = [{meal_key: menu_item.type_of_meal, name_key: menu_item.name, dishes_key: menu_item.dishes} for menu_item in MenuItem.query.all()
