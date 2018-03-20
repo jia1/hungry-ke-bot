@@ -1,8 +1,10 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+from raven.contrib.flask import Sentry
 
 import os
 import requests
+import sys
 from datetime import datetime
 from pytz import timezone
 from urllib import parse
@@ -21,6 +23,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Silence the deprecation w
 db = SQLAlchemy(app)
 
 from models import MenuItem # Import after everything else, otherwise circular dependency
+
+sentry = Sentry(app) # Must export SENTRY_DSN
 
 @app.route('/')
 def index():
@@ -52,8 +56,12 @@ def index():
 @app.route('/{}'.format(bot_token), methods=['POST'])
 def get_today_menu():
     req = request.get_json()
-    chat_id = req['message']['chat']['id']
-    message = req['message']['text']
+    try:
+        chat_id = req['message']['chat']['id']
+        message = req['message']['text']
+    except KeyError as e:
+        print('Exception: {}\nRequest: {}'.format(e, req))
+        return
     if message == '/start':
         today = datetime.now(timezone('Asia/Singapore')).date()
         menu_items = [{meal_key: menu_item.type_of_meal, name_key: menu_item.name, dishes_key: menu_item.dishes} for menu_item in MenuItem.query.all()
@@ -77,14 +85,15 @@ def get_pretty(meals, meal_types=['breakfast', 'dinner']):
     for i in range(len(meals)):
         string_builder.append('\n\n**{meal}**'.format(meal=meal_types[i].capitalize()))
         menu_items = meals[i]
+        if not menu_items:
+            string_builder.append('\nN.A.')
+            continue
         for index, menu_item in enumerate(menu_items, ord('A')):
             string_builder.append('\n{index}. {name}'.format(index=chr(index), name=menu_item[name_key].capitalize()))
             if menu_item[dishes_key]:
                 dishes = menu_item[dishes_key].split(dishes_string_separator)
                 for index, dish in enumerate(dishes, 1):
                     string_builder.append('\n    {index}. {dish}'.format(index=index, dish=dish.capitalize()))
-    if len(string_builder) == 1:
-        string_builder.append('\nN.A.')
     return ''.join(string_builder)
 
 if __name__ == '__main__':

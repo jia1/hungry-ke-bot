@@ -72,7 +72,7 @@ python3 manage.py db upgrade
 
 ### 2. On Heroku website or with Heroku CLI
 1. Create a Heroku application.
-1. Define the following environment variables: `BOT_TOKEN`, `DB_URL` (under the Settings tab).
+1. Define the following environment variables: `BOT_TOKEN`, `DB_URL`, `SENTRY_DSN` (under the Settings tab).
 1. Push repository and deploy to Heroku.
 1. Switch on the `upgrade` dyno at `Configure dynos` (under the Resources tab).
 
