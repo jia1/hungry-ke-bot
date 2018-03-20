@@ -4,7 +4,6 @@ from raven.contrib.flask import Sentry
 
 import os
 import requests
-import sys
 from datetime import datetime
 from pytz import timezone
 from urllib import parse
@@ -56,12 +55,8 @@ def index():
 @app.route('/{}'.format(bot_token), methods=['POST'])
 def get_today_menu():
     req = request.get_json()
-    try:
-        chat_id = req['message']['chat']['id']
-        message = req['message']['text']
-    except KeyError as e:
-        print('Exception: {}\nRequest: {}'.format(e, req))
-        return 'NOT OK'
+    chat_id = req['message']['chat']['id']
+    message = req['message'].get('text', '')
     if message == '/start':
         today = datetime.now(timezone('Asia/Singapore')).date()
         menu_items = [{meal_key: menu_item.type_of_meal, name_key: menu_item.name, dishes_key: menu_item.dishes} for menu_item in MenuItem.query.all()
