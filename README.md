@@ -62,17 +62,20 @@ python3 -m venv .
 pip3 install -r requirements.txt
 
 # Run the following commands if the migrations directory is not available
+# We need to commit the output of these commands because Heroku only offers 2 free dynos,
+# and we will assign them to the web and upgrade command (see Procfile)
 python3 manage.py db init
 python3 manage.py db migrate
 
-# If you want to run a local server, you need to export the following enrivonment variables: BOT_TOKEN and DB_URL
+# If you want to run a local server, you need to export the following enrivonment variables:
+# BOT_TOKEN, DB_URL, FLASK_APP=app.py, SENTRY_DSN
 # And then you run the following commands:
 python3 manage.py db upgrade
 ```
 
 ### 2. On Heroku website or with Heroku CLI
 1. Create a Heroku application.
-1. Define the following environment variables: `BOT_TOKEN`, `DB_URL`, `SENTRY_DSN` (under the Settings tab).
+1. Define the following environment variables: `BOT_TOKEN`, `DB_URL`, `FLASK_APP=app.py`, `SENTRY_DSN` (under the Settings tab).
 1. Push repository and deploy to Heroku.
 1. Switch on the `upgrade` dyno at `Configure dynos` (under the Resources tab).
 
