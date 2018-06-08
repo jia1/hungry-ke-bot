@@ -67,7 +67,7 @@ pip3 install -r requirements.txt
 python3 manage.py db init
 python3 manage.py db migrate
 
-# If you want to run a local server, you need to export the following enrivonment variables:
+# If you want to run a local server, you need to export the following environment variables:
 # BOT_TOKEN, DB_URL, FLASK_APP=app.py, SENTRY_DSN
 # And then you run the following commands:
 python3 manage.py db upgrade
